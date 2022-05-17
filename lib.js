@@ -69,70 +69,57 @@ class pjs{
 			this.#ctx.stroke();
 		}
 	}
+	rect(x, y, width, height){
+		if(this.#dostroke === false && this.#dofill === false){
+			console.warn("both stroke and fill are turned off"); //should maybe be an error
+			return;
+		}
+		if(this.#dofill){
+			this.#ctx.fillRect(x, y, width, height);
+		}
+		if(this.#dostroke){
+			this.#ctx.strokeRect(x, y, width, height);
+		}
+	}
+	line(x1, y1, x2, y2){
+		if(this.#dostroke === false){
+			console.warn("stroke is turned off but you are attempting to draw a line"); //should maybe be an error
+			return;
+		}
+		this.#ctx.beginPath();
+		this.#ctx.moveTo(x1, y1);
+		this.#ctx.lineTo(x2, y2);
+		this.#ctx.stroke();
+	}
+	background(r, g, b){
+		let prevfill = this.#ctx.fillStyle;
+		this.#ctx.fillStyle = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+		this.#ctx.fillRect(0, 0, this.#canvas.width, this.#canvas.height);
+		this.#ctx.fillStyle = prevfill;
+	}
+	fill(r, g, b){
+		if(this.#dofill !== true){
+			this.#dofill = true; 
+		}
+		this.#ctx.fillStyle = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+	}
+	stroke(r, g, b){
+		if(this.#dostroke !== true){
+			this.#dostroke = true;
+		}
+		this.#ctx.strokeStyle = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+	}
+	strokeWeight(weight){
+		this.#ctx.lineWidth = weight;
+	}
+	noStroke(){
+		this.#dostroke = false;
+	}
+	noFill(){
+		this.#dofill = false;
+	}
 }
 
-
-function(id){
-
-}
-
-pjs.createCanvas = function(width = 400, height = 400){
-	
-}
-
-
-pjs.prototype.triangle = function(x1, y1, x2, y2, x3, y3){// should be optimized
-	
-}
-pjs.prototype.rect = function(x, y, width, height){
-	if(this.dostroke === false && this.dofill === false){
-		console.warn("both stroke and fill are turned off");
-		return;
-	}
-	if(this.dofill){
-		this.ctx.fillRect(x, y, width, height);
-	}
-	if(this.dostroke){
-		this.ctx.strokeRect(x, y, width, height);
-	}
-}
-pjs.prototype.line = function(x1, y1, x2, y2){//should be optimized
-	if(this.dostroke === false){
-		console.warn("stroke is turned off but you are attempting to draw a line");
-		return;
-	}
-	this.ctx.beginPath();
-	this.ctx.moveTo(x1, y1);
-	this.ctx.lineTo(x2, y2);
-	this.ctx.stroke();
-}
-pjs.prototype.background = function(r, g, b){
-	this.prevfill = this.ctx.fillStyle;
-	this.ctx.fillStyle = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-	this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-	this.ctx.fillStyle = this.prevfill;
-}
-pjs.prototype.fill = function(r, g, b){
-	if(this.dofill !== true){
-		this.dofill = true; 
-	}
-	this.ctx.fillStyle = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-}
-pjs.prototype.stroke = function(r, g, b){
-	if(this.dostroke !== true){
-		this.dostroke = true;
-	}
-	this.ctx.strokeStyle = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-}
-pjs.prototype.strokeWeight = function(weight){
-	this.ctx.lineWidth = weight;
-}
-pjs.prototype.noStroke = function(){
-	this.dostroke = false;
-}
-pjs.prototype.noFill = function(){
-	this.dofill = false;
-}
 
 //utilities
 pjs.random = function(min, max){
