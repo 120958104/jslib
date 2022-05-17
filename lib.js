@@ -1,62 +1,88 @@
-var pjs = function(id){
-	if(typeof id === "string"){
-		this.canvas = document.getElementById(id);
-	} else if(typeof id === "object"){
-		this.canvas = id;
+class pjs{
+	#canvas;
+	#ctx;
+	get canvas(){
+		return this.#canvas;
 	}
-	try{
-		this.ctx = this.canvas.getContext("2d");
-	} catch(error){
-		throw new TypeError("Supplied element is not a canvas");
+	get ctx(){
+		return this.#ctx;
 	}
 
-	this.ctx.fillStyle = "#FFFFFF";
-	
-	this.dostroke = true;
-	this.dofill = true;
+	#dostroke;
+	#dofill;
+
+	constructor(id){
+		if(typeof id === "string"){
+			this.#canvas = document.getElementById(id);
+		} else if(typeof id === "object"){
+			this.#canvas = id;
+		}
+		try{
+			this.#ctx = this.#canvas.getContext("2d");
+		} catch(error){
+			throw new TypeError("Supplied element is not a canvas");
+		}
+
+		this.#ctx.fillStyle = "#FFFFFF";
+		
+		this.#dostroke = true;
+		this.#dofill = true;
+	}
+	static createCanvas(width = 400, height = 400){
+		var newCanvas = document.createElement("canvas");
+		newCanvas.height = height;
+		newCanvas.width = width;
+		newCanvas.style = "border:1px solid #000000;";
+
+		document.body.appendChild(newCanvas);
+		return new pjs(newCanvas);
+	}
+	//drawing
+	ellipse(x, y, width, height){
+		if(this.#dostroke === false && this.#dofill === false){
+			console.warn("both stroke and fill are turned off"); //should maybe be an error
+			return;
+		}
+		this.#ctx.beginPath();
+		this.#ctx.ellipse(x, y, width, height, Math.PI / 4, 0, 2 * Math.PI);
+		if(this.#dofill){
+			this.#ctx.fill();
+		}
+		if(this.#dostroke){
+			this.#ctx.stroke();
+		}
+	}
+	triangle(x1, y1, x2, y2, x3, y3){
+		if(this.#dostroke === false && this.#dofill === false){
+			console.warn("both stroke and fill are turned off"); //should maybe be an error
+			return;
+		}
+		this.#ctx.beginPath();
+		this.#ctx.moveTo(x1, y1);
+		this.#ctx.lineTo(x2, y2);
+		this.#ctx.lineTo(x3, y3);
+		this.#ctx.lineTo(x1, y1);
+		if(this.#dofill){
+			this.#ctx.fill();
+		}
+		if(this.#dostroke){
+			this.#ctx.stroke();
+		}
+	}
+}
+
+
+function(id){
+
 }
 
 pjs.createCanvas = function(width = 400, height = 400){
-	var newCanvas = document.createElement("canvas");
-	newCanvas.height = height;
-	newCanvas.width = width;
-	newCanvas.style = "border:1px solid #000000;";
-
-	document.body.appendChild(newCanvas);
-	return new pjs(newCanvas);
+	
 }
 
-//drawing 
-pjs.prototype.ellipse = function(x, y, width, height){//should be optimized
-	if(this.dostroke === false && this.dofill === false){
-		console.warn("both stroke and fill are turned off");
-		return;
-	}
-	this.ctx.beginPath();
-	this.ctx.ellipse(x, y, width, height, Math.PI / 4, 0, 2 * Math.PI);
-	if(this.dofill){
-		this.ctx.fill();
-	}
-	if(this.dostroke){
-		this.ctx.stroke();
-	}
-}
+
 pjs.prototype.triangle = function(x1, y1, x2, y2, x3, y3){// should be optimized
-	if(this.dostroke === false && this.dofill === false){
-		console.warn("both stroke and fill are turned off");
-		return;
-	}
-	this.ctx.beginPath();
-	this.ctx.moveTo(x1, y1);
-	this.ctx.lineTo(x2, y2);
-	this.ctx.lineTo(x3, y3);
-	this.ctx.lineTo(x1, y1);
-	if(this.dofill){
-		this.ctx.fill();
-	}
-	if(this.dostroke){
-		this.ctx.stroke();
-	}
+	
 }
 pjs.prototype.rect = function(x, y, width, height){
 	if(this.dostroke === false && this.dofill === false){
