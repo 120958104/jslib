@@ -118,15 +118,35 @@ class pjs{
 	noFill(){
 		this.#dofill = false;
 	}
+
+	//utilities
+	static random(min, max){
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min) + min);
+	}
+	
+	static calcPosOffset(r, theta){
+		return {
+			x: r * Math.cos(theta),
+	    		y: r * Math.sin(theta)
+		}
+	}
+	static calcRotOffset(x, y){
+		var theta = Math.atan(y/x);
+		if(x > 0){
+			theta += Math.PI;
+		}
+	
+		var r = y/(Math.sin(theta));
+		r = -r;
+		return {r, theta};
+	}
 }
 
 
 //utilities
-pjs.random = function(min, max){
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min) + min);
-}
+
 pjs.setCookie = function(cname, cvalue, exdays){
 	const d = new Date();
 	d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -147,23 +167,6 @@ pjs.getCookie = function(cname) {
 		}
 	}
 	return "";
-}
-
-pjs.calcPosOffset = function(r, theta){
-	return {
-		x: r * Math.cos(theta),
-	    	y: r * Math.sin(theta)
-	}
-}
-pjs.calcRotOffset = function(x, y){
-	var theta = Math.atan(y/x);
-	if(x > 0){
-		theta += Math.PI;
-	}
-
-	var r = y/(Math.sin(theta));
-	r = -r;
-	return {r, theta};
 }
 //mouse event listeners
 pjs.mouseX = 0;
